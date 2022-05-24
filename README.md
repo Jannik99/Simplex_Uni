@@ -21,3 +21,4 @@ run: source venv/bin/activate
 a) go to "./simplex-solver/benchmarks"<br>
 b) make a new .txt file<br>
 c) insert conditions for a new Benchmark following the pattern of the existing ones
+(If its a minimization, write "min:" in front of the Objective function, if its a maximization, write "max: in front of the Objective function)
