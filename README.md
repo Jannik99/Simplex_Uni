@@ -22,7 +22,7 @@ a) go to "./simplex-solver/benchmarks"<br>
 b) make a new .txt file<br>
 c) insert conditions for a new Benchmark following the pattern of the existing ones
 
-<div style="border: 1px dashed grey; padding: 4px"><strong>Note: </strong>If its a minimization, write "min:" in front of the Objective function, if its a maximization, write "max: in front of the Objective function</div>
+<div style="border: 1px dashed grey; padding: 4px"><strong>Note: </strong>If its a minimization, write "min:" in front of the Objective function, if its a maximization, write "max:" in front of the Objective function</div>
 
 # Run Software
 
