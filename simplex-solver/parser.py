@@ -1,4 +1,5 @@
 import os
+from calendar import c
 from cmath import log
 from inspect import _void
 
@@ -53,20 +54,21 @@ def parseFileContents(contents : list):
         coefficients = []
         parts = row.split(" ")
         for i in range(len(parts)):
-            print("i = " + str(i))
             if parts[i] == "+":
                 coefficients.append(int(parts[i+1].split("x")[0].strip("*")))
+                
             elif parts[i] == "-":
                 coefficients.append(-int(parts[i+1].split("x")[0].strip("*")))
+                
             elif parts[i] == ">=" or parts[i] == "<=":
                 coefficients.append(int(parts[i+1].strip(";")))
-            rows.append(coefficients)
-        
+            
+            if(i == len(parts) - 1):
+                rows.append(coefficients)
         
     print("\n")
     print(rows)
     print(min_or_max)
-    print(len(rows))
     return rows, min_or_max
 
 
