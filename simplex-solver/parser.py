@@ -33,7 +33,6 @@ def __parseFileContents(contents : list):
     last_row: str = ""
     min_or_max = ""
     for line in contents:
-        # print(line)
         if line.startswith("//"):
             continue
         if line.startswith(" +") or line.startswith(" -"):
@@ -64,10 +63,6 @@ def __parseFileContents(contents : list):
             
             if(i == len(parts) - 1):
                 rows.append(coefficients)
-        
-    # print("\n")
-    # print(rows)
-    # print(min_or_max)
     return rows, min_or_max
 
 
