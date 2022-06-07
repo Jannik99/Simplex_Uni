@@ -1,81 +1,104 @@
-# A Function taking variables and running a simplex algorithm with recursion
-def simplex(c, A, b, m):
-    # Initialize the variables
-    n = len(c)
-    x = [0] * n
-    # Run the simplex algorithm
-    while True:
-        # Check if the solution is optimal
-        if check_optimal(c, A, b, x):
-            return x
-        # Find the pivot
-        pivot = find_pivot(c, A, b, x)  
-        # Check if the solution is unbounded
-        if pivot == None:
-            return None
-        # Perform the pivot
-        pivot_row = A[pivot]
-        pivot_value = pivot_row[pivot]
-        for i in range(n):
-            pivot_row[i] /= pivot_value
-        b[pivot] /= pivot_value
-        for i in range(m):
-            if i != pivot:
-                row = A[i]
-                factor = row[pivot]
-                for j in range(n):
-                    row[j] -= factor * pivot_row[j]
-                b[i] -= factor * b[pivot]
-        # Update the solution
-        x[pivot] = 1
-        for i in range(n):
-            if i != pivot:
-                x[i] = 0  
-    # Return the solution
-    return x
-# A Function checking if the solution is optimal
-def check_optimal(c, A, b, x):
-    # Initialize the variables
-    n = len(c)
-    m = len(A)
-    # Check if the solution is optimal  
-    for i in range(n):
-        if c[i] > 0 and x[i] < 0:
-            return False
-    for i in range(m):
-        if b[i] < 0:
-            return False
-    return True
-# A Function finding the pivot
-def find_pivot(c, A, b, x):
-    # Initialize the variables
-    n = len(c)
-    m = len(A)
-    # Find the pivot
-    for i in range(m):
-        if b[i] < 0:
-            return i
-    for i in range(n):
-        if c[i] > 0 and x[i] < 0:
-            return i
-    return None
-# A Function printing the solution
-def print_solution(x):
-    # Initialize the variables
-    n = len(x)
-    # Print the solution
-    for i in range(n):
-        print("x" + str(i) + " = " + str(x[i]))
+from parser import *
+
+import numpy as np
+
+test_a = [ [1, 1, 3], [2, 4, 8], [2, 3, 0]]
+test_b = [[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2]]
 
 
-def main():
-    # Initialize the variables
-    c = [1, 1, 1]
-    A = [[1, 1, 1], [1, 1, 1], [1, 1, 1]]
-    b = [1, 1, 1]
-    m = len(A)
-    # Run the simplex algorithm
-    x = simplex(c, A, b, m)
-    # Print the solution
-    print_solution(x)
+def find_pivot(parsed):
+    print("Searching for pivot column")
+    # find position of largest element in last row
+    pivot_col_index = np.argmax(parsed[-1])
+    pivot_column = [row[pivot_col_index] for row in parsed][:-1]
+    print("Pivot column: ", pivot_column)
+    # find pivot row
+    print("Searching for pivot element")
+    (calculating_pivot_element, pivot_row_index) = (parsed[0,-1]/pivot_column[0], 0)
+    for i, item in enumerate(pivot_column):
+        if(item != 0):
+            element = parsed[i, -1]/item
+        
+        if(element < calculating_pivot_element):
+            calculating_pivot_element = element
+            pivot_row_index = i
+
+    pivot_element = parsed[pivot_row_index, pivot_col_index]
+    print("Pivot col: ", pivot_col_index)
+    print("Pivot row: ", pivot_row_index)
+    print("Pivot Element: ", pivot_element)
+    return (pivot_row_index, pivot_col_index, pivot_element)
+        
+
+def makeTable(parsed):
+    print("Generating table")
+    # make table from parsed data and add space for slack variables
+    table = np.zeros((len(parsed), (len(parsed)*2)-1))
+    for i, row in enumerate(parsed):
+        for j, item in enumerate(row):
+            if(j < len(row)-1):
+                table[i, j] = item
+            else:
+                table[i, -1] = item
+    print(table)
+    # Fill slack variables
+    print ("Filling slack variables")
+    for i in range(len(table)):
+        index_becoming_one = len(table[0])-(len(table)-i)
+        if(i != len(table)-1):
+            table[i, index_becoming_one] = 1
+    print(table)
+    return table
+
+
+def single_run(table, pivot_row_index, pivot_col_index, pivot_element):
+    # Making pivot element 1
+    print("Making pivot element 1")
+    table[pivot_row_index] = table[pivot_row_index]/pivot_element
+    print(table)
+    # Making pivot column 0
+    print("Making pivot column 0")
+    for i in range(len(table)):
+        if(i != pivot_row_index):
+            table[i] = table[i]-(table[i, pivot_col_index]*table[pivot_row_index])
+    print(table)
+    return table
+
+def check_if_solved(table):
+    ret = True
+    for el in table[-1]:
+        if(el > 0):
+            ret = False
+    return ret
+
+def solve(parsed):
+    table = makeTable(parsed)
+    while(True):
+        pivot_row_index, pivot_col_index, pivot_element = find_pivot(table)
+        table = single_run(table, pivot_row_index, pivot_col_index, pivot_element)
+        if(check_if_solved(table)):
+            break
     
+    z = table[-1, -1]
+    x = []
+    print("SOLVED !!")
+    print("z = " , table[-1, -1])
+    for i in range(len(parsed)-1):
+        x.append(table[i, -1]/table[i, i])
+        print("x"+str(i+1), " = ", x[-1])
+
+    print ("Table: \n", table)
+    return table, x, z
+
+    
+
+# Running everything
+parsedBenchmarks = getParsedBenchmarks()
+solutions = []
+for i, parsed in enumerate(parsedBenchmarks):
+    print("Benchmark: ", i)
+    solutions.append(solve(parsed[0]))
+
+# solve(test_b)
+
+print("Solutions: ", solutions)
