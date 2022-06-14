@@ -1,7 +1,6 @@
 import os
-from calendar import c
-from cmath import log
-from inspect import _void
+
+import numpy as np
 
 benchmark_dir = "./benchmarks"
 
@@ -63,7 +62,8 @@ def __parseFileContents(contents : list):
             
             if(i == len(parts) - 1):
                 rows.append(coefficients)
-    return rows, min_or_max
+    rows[-1].append(0)
+    return np.array(rows), min_or_max
 
 
 

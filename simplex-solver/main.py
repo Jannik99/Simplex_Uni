@@ -2,103 +2,90 @@ from parser import *
 
 import numpy as np
 
-test_a = [ [1, 1, 3], [2, 4, 8], [2, 3, 0]]
-test_b = [[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2]]
+test_a = np.array([ [1, 1, 3], [2, 4, 8], [2, 3, 0]])
+test_b = np.array([[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2, 0]])
+test_c = np.array([[4,5,4,1,5,2,7,2,9,22], [9,3,8,5,4,1,8,2,2,55], [4,8,1,7,8,6,6,3,9,24], [8,8,6,6,4,4,9,2,5,46], [4,2,3,1,5,9,6,4,4,6], [9,3,2,8,1,3,7,7,5,11], [7,8,3,5,3,1,3,6,8,59], [9,4,6,4,1,3,3,8,7,17], [9,5,3,8,6,8,5,3,1, 0]])
 
 
-def find_pivot(parsed):
-    print("Searching for pivot column")
-    # find position of largest element in last row
-    pivot_col_index = np.argmax(parsed[-1])
-    pivot_column = [row[pivot_col_index] for row in parsed][:-1]
-    print("Pivot column: ", pivot_column)
-    # find pivot row
-    print("Searching for pivot element")
-    (calculating_pivot_element, pivot_row_index) = (parsed[0,-1]/pivot_column[0], 0)
-    for i, item in enumerate(pivot_column):
-        if(item != 0):
-            element = parsed[i, -1]/item
-        
-        if(element < calculating_pivot_element):
-            calculating_pivot_element = element
-            pivot_row_index = i
-
-    pivot_element = parsed[pivot_row_index, pivot_col_index]
-    print("Pivot col: ", pivot_col_index)
-    print("Pivot row: ", pivot_row_index)
-    print("Pivot Element: ", pivot_element)
-    return (pivot_row_index, pivot_col_index, pivot_element)
-        
-
-def makeTable(parsed):
-    print("Generating table")
-    # make table from parsed data and add space for slack variables
-    table = np.zeros((len(parsed), (len(parsed)*2)-1))
-    for i, row in enumerate(parsed):
-        for j, item in enumerate(row):
-            if(j < len(row)-1):
-                table[i, j] = item
-            else:
-                table[i, -1] = item
-    print(table)
-    # Fill slack variables
-    print ("Filling slack variables")
-    for i in range(len(table)):
-        index_becoming_one = len(table[0])-(len(table)-i)
-        if(i != len(table)-1):
-            table[i, index_becoming_one] = 1
-    print(table)
-    return table
-
+def find_pivot(table):
+  print("Finding pivot")
+  pivot_col_index = np.argmax(table[-1])
+  pivot_row_index = np.argmin(np.divide([row[-1] for row in table][:-1], table[:-1, pivot_col_index]))
+  print("Pivot row index: " + str(pivot_row_index))
+  print("Pivot column index: " + str(pivot_col_index))
+  print("Pivot element: " + str(table[pivot_row_index][pivot_col_index]))
+  return (pivot_row_index, pivot_col_index, table[pivot_row_index, pivot_col_index])
+    
+def transposeTable(table):
+  print("Transposing table")
+  return np.transpose(table)
+    
+def addSlackVariables(table):
+  print("Adding slack variables")
+  tableshape = table.shape
+  newTableshape = (tableshape[0], tableshape[1] + tableshape[0] - 1) # New table has to be (rows, columns + rows - 1)
+  newTable = np.zeros(newTableshape) # Initialize new table with zeros
+  np.fill_diagonal(newTable[:, tableshape[1]-1:], 1) # Fill diagonal with ones
+  newTable[:, 0:tableshape[1]-1] = table[:, 0:tableshape[1]-1] # Copy old table into new table
+  newTable[:, -1] = table[:, -1] # Copy last column of old table into new table
+  return newTable
 
 def single_run(table, pivot_row_index, pivot_col_index, pivot_element):
-    # Making pivot element 1
-    print("Making pivot element 1")
-    table[pivot_row_index] = table[pivot_row_index]/pivot_element
-    print(table)
-    # Making pivot column 0
-    print("Making pivot column 0")
-    for i in range(len(table)):
-        if(i != pivot_row_index):
-            table[i] = table[i]-(table[i, pivot_col_index]*table[pivot_row_index])
-    print(table)
-    return table
+  print("Single run of simplex")
+
+  table[pivot_row_index] = table[pivot_row_index]/pivot_element
+  for i in range(len(table)):
+    if(i != pivot_row_index):
+      table[i] = table[i]-(table[i, pivot_col_index]*table[pivot_row_index])
+  return table
 
 def check_if_solved(table):
-    ret = True
-    for el in table[-1]:
-        if(el > 0):
-            ret = False
-    return ret
+  for el in table[-1]:
+    if(el > 0):
+      return False
+  return True
 
 def solve(parsed):
-    table = makeTable(parsed)
-    while(True):
-        pivot_row_index, pivot_col_index, pivot_element = find_pivot(table)
-        table = single_run(table, pivot_row_index, pivot_col_index, pivot_element)
-        if(check_if_solved(table)):
-            break
+  table = parsed[0]
+  if(parsed[1] == "min"):
+    table = transposeTable(table)
+  
+  if check_if_solved(table):
+    print("Table is already solved")
+  else:  
+    print("Solving Table")
+    while(not check_if_solved(table)):
+      print(table)
+      table = addSlackVariables(table)
+      print(table)
+      table = single_run(table, *find_pivot(table))
+      print(table)
+    print("Table is solved \n", table)
     
-    z = table[-1, -1]
-    x = []
-    print("SOLVED !!")
-    print("z = " , table[-1, -1])
-    for i in range(len(parsed)-1):
-        x.append(table[i, -1]/table[i, i])
-        print("x"+str(i+1), " = ", x[-1])
+    get_solution_from_solved_table(table)
+  return table
 
-    print ("Table: \n", table)
-    return table, x, z
+def get_solution_from_solved_table(table):
+  x = []
+  z = table[-1, -1]
+  for i in range(len(table)-1):
+    if(table[i][i] != 0):
+      x.append(table[i,-1]/table[i,i])
+    else:
+      x.append(0)
+    print("x"+str(i), " = ", x[-1])
+  print("z = ", z)
+  return x, z
 
-    
-
-# Running everything
-parsedBenchmarks = getParsedBenchmarks()
-solutions = []
-for i, parsed in enumerate(parsedBenchmarks):
+def solve_all():
+  parsedBenchmarks = getParsedBenchmarks()
+  solutions = []
+  for i, parsed in enumerate(parsedBenchmarks):
     print("Benchmark: ", i)
-    solutions.append(solve(parsed[0]))
+    solutions.append(solve(parsed)) 
 
-# solve(test_b)
+# solve_all()
 
-print("Solutions: ", solutions)
+# solve((test_a, "max"))
+# solve((test_b, "min"))
+solve((test_c, "min"))
