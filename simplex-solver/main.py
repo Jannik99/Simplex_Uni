@@ -54,10 +54,10 @@ def solve(parsed):
     print("Table is already solved")
   else:  
     print("Solving Table")
+    print(table)
+    table = addSlackVariables(table)
+    print(table)
     while(not check_if_solved(table)):
-      print(table)
-      table = addSlackVariables(table)
-      print(table)
       table = single_run(table, *find_pivot(table))
       print(table)
     print("Table is solved \n", table)
@@ -86,6 +86,6 @@ def solve_all():
 
 # solve_all()
 
-# solve((test_a, "max"))
+solve((test_a, "max"))
 # solve((test_b, "min"))
-solve((test_c, "min"))
+# solve((test_c, "min"))
