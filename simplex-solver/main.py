@@ -33,10 +33,10 @@ def addSlackVariables(table):
 def single_run(table, pivot_row_index, pivot_col_index, pivot_element):
   print("Single run of simplex")
 
-  table[pivot_row_index] = table[pivot_row_index]/pivot_element
-  for i in range(len(table)):
-    if(i != pivot_row_index):
-      table[i] = table[i]-(table[i, pivot_col_index]*table[pivot_row_index])
+  table[pivot_row_index] = table[pivot_row_index]/pivot_element # make pivot element 1 by dividing pivot row / pivot element
+  for i in range(len(table)): # for every row 
+    if(i != pivot_row_index): # except for pivot row
+      table[i] = table[i]-(table[i, pivot_col_index]*table[pivot_row_index]) # Pivotcolelement to 0 by:  row = row - (Pivotcolnelement * pivotrow)
   return table
 
 def check_if_solved(table):
@@ -67,7 +67,7 @@ def solve(parsed):
 
 def get_solution_from_solved_table(table):
   x = []
-  z = table[-1, -1]
+  z = table[-1, -1] * (-1) # *(-1) because 
   for i in range(len(table)-1):
     if(table[i][i] != 0):
       x.append(table[i,-1]/table[i,i])
