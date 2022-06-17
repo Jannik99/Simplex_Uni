@@ -1,4 +1,5 @@
 from parser import *
+from tracemalloc import stop
 
 import numpy as np
 
@@ -60,32 +61,45 @@ def solve(parsed):
     while(not check_if_solved(table)):
       table = single_run(table, *find_pivot(table))
       print(table)
-    print("Table is solved \n", table)
+    print("Table is solved \n", np.round(table, decimals=2))
     
-    get_solution_from_solved_table(table)
-  return table
+  return get_solution_from_solved_table(table, parsed[1])
 
-def get_solution_from_solved_table(table):
-  x = []
-  z = table[-1, -1] * (-1) # *(-1) because 
-  for i in range(len(table)-1):
-    if(table[i][i] != 0):
-      x.append(table[i,-1]/table[i,i])
+def get_solution_from_solved_table(table, max_or_min):
+    x = []
+    z = table[-1, -1] * (-1) # *(-1) because I cannot transform, since I do not use a variable 
+    if max_or_min == "max":
+        for i in range(len(table)-1):
+            if(table[i][i] != 0):
+                x.append(table[i,-1]/table[i,i])
+            else:
+                x.append(0)
+            print("x"+str(i), " = ", x[-1])
+        print("z = ", z)
     else:
-      x.append(0)
-    print("x"+str(i), " = ", x[-1])
-  print("z = ", z)
-  return x, z
+        num_rows, num_cols = np.shape(table)
+        start_index = num_cols - num_rows
+        stop_index = num_cols - 1
+        print("start", start_index)
+        print("stop", stop_index)
+        for i in range(stop_index - start_index):
+            x.append(table[-1, start_index + i] * -1)
+            print("x"+str(i), " = ", x[-1])
+    print("z = ", z)
+    return x, z
 
 def solve_all():
   parsedBenchmarks = getParsedBenchmarks()
   solutions = []
   for i, parsed in enumerate(parsedBenchmarks):
     print("Benchmark: ", i)
-    solutions.append(solve(parsed)) 
+    solutions.append(solve(parsed))
+    print("All Solutions:")
+    for i in range(len(solutions)):
+        print("Solution ", i, ":", solutions[i])
 
-# solve_all()
+solve_all()
 
-solve((test_a, "max"))
+# solve((test_a, "max"))
 # solve((test_b, "min"))
 # solve((test_c, "min"))
