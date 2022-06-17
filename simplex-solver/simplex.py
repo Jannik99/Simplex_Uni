@@ -1,7 +1,7 @@
 import numpy as np
 
 def solve(array):
-    
+
     # TODO: Transponiere nur weil Minimierungsproblem ist.. Anpassbar
     transposed = np.transpose(array)
 
@@ -28,18 +28,21 @@ def solve(array):
         finished = True if np.max(last_column) < 0 else False
         return finished
 
-    iterations = 0
-    new_matrix = search_pivot_position(new_matrix)
-    iterations += 1
-    print(f'Matrix: {new_matrix}')
-    print(f'Finished: {check_for_finish(new_matrix)}')
-    new_matrix = search_pivot_position(new_matrix)
-    iterations += 1
-    print(f'Matrix: {new_matrix}')
-    print(f'Finished: {check_for_finish(new_matrix)}')
+    print(f'First Iteration: \n {iterate(new_matrix)}')
 
-def search_pivot_position(matrix):
-    print(f"Searching Pivot Column, Row, Element on \n {matrix}")
+
+    solution = iterate(new_matrix)
+    finished = check_for_finish(solution)
+    print(f'Second Iteration \n {solution}')
+
+    base_swap = solution[:, num_cols-1:]
+
+    print_solution(base_swap)
+
+    
+    
+def iterate(matrix):
+    #print(f"Searching Pivot Column, Row, Element on \n {matrix}")
     last_row = matrix[len(matrix)-1 , :-1]
     # find position of largest element in last row
     index_largest_element = np.argmax(last_row, axis = 0)
@@ -47,14 +50,13 @@ def search_pivot_position(matrix):
 
     # take last columns and divide it with pivot column
     last_column = matrix[:-1, -1]
-    print(f'Last column: {last_column}')
-    print(f'Pivot Column: {pivot_column}')
-    tmp = np.divide(last_column, pivot_column, where=pivot_column!=0)
+    temporary_solution_column = np.divide(last_column, pivot_column, where=pivot_column!=0)
     #tmp = last_column / pivot_column
-    matrix[:-1, -1] = tmp
+    print(f'Ergebnisspalte: {temporary_solution_column}')
+    #matrix[:-1, -1] = tmp
     # find position of smallest element in temporary column
     # TODO: GRÖ?ER ALS 0
-    index_smallest_element = np.argmin(tmp, axis = 0)
+    index_smallest_element = np.argmin(temporary_solution_column, axis = 0)
 
     pivot_position = index_smallest_element, index_largest_element
     print(f'Position Pivot Element {pivot_position}')
@@ -66,7 +68,7 @@ def search_pivot_position(matrix):
     print(f'Pivot Element: {pivot_element}')
     
     print("Pivot Reihe durch Pivot Element um dieses auf 1 zu bringen")
-    pivot_row[:-1] /= pivot_element 
+    pivot_row /= pivot_element 
     # Pivot Element ist jetzt auf 1. Jedes Element da drunter muss  0 werden.
 
     print(f'Neue Pivot Reihe {pivot_row}' )
@@ -81,24 +83,21 @@ def search_pivot_position(matrix):
         if row_index != pivot_position[0]:
             # Berechne Koeffizient
             coefficient = matrix[row_index, pivot_position[1]]
-            print(f'row {row} - pivot_row {pivot_row} * coefficient {coefficient}')
             row = row - pivot_row * coefficient
-            print(f'new row {row}')
             matrix[row_index, :] = row
         row_index += 1
+    return np.round(matrix, decimals=2)
 
-        # 1/5 - x*pivot_reihe = 0
-        # 1/5 = x*pivot_reihe
-        # 1/5/pivot_reihe = x 
-    
-
-    # Reihe = Reihe - Koeffizient * Pivot_reihe
-    # Koeffizient = matrix[row_index, pivot_position[1]]
-
-    # Zeile - Element über/drunter dem PivotELement * PivotElement
-    # TODO: NACHRECHNEN...
-    return np.round(matrix, decimals=7)
-
+def print_solution(matrix):
+    solution_row = matrix[-1, :]
+    iterations = 0
+    for element in solution_row:
+        if iterations != solution_row.size - 1:
+            print(f'x{iterations} = {element*-1}')
+        else:
+            print(f'Z: {element*-1}')
+        iterations +=1
     
 a = np.array([[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2,0]])
+b = np.array([[2,2,2,5,7,8,2,5,51], [4,4,3,1,2,7,5,1,1], [8,5,3,6,6,2,2,6,26], [7,8,5,7,8,1,4,7,38], [1,6,6,6,2,6,8,7,0]])
 solve(a)
