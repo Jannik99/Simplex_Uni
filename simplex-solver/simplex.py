@@ -1,8 +1,9 @@
+from parser import *
+
 import numpy as np
 
 def solve(array):
-
-    # TODO: Transponiere nur weil Minimierungsproblem ist.. Anpassbar
+    # Transponiere weil Minimierungsproblem
     transposed = np.transpose(array)
 
     # calculate how many extra variables we need
@@ -36,6 +37,7 @@ def solve(array):
     print(f'Second Iteration \n {solution}')
 
     base_swap = solution[:, num_cols-1:]
+    print(f'base_swap \n {base_swap}')
 
     print_solution(base_swap)
 
@@ -97,7 +99,17 @@ def print_solution(matrix):
         else:
             print(f'Z: {element*-1}')
         iterations +=1
-    
-a = np.array([[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2,0]])
-b = np.array([[2,2,2,5,7,8,2,5,51], [4,4,3,1,2,7,5,1,1], [8,5,3,6,6,2,2,6,26], [7,8,5,7,8,1,4,7,38], [1,6,6,6,2,6,8,7,0]])
-solve(a)
+
+parsed_benchmarks = getParsedBenchmarks()
+benchmarks = []
+for i, parsed in enumerate(parsed_benchmarks):
+    benchmarks.append(parsed[0])
+
+for benchmark in benchmarks:
+    solve(benchmark)
+
+#a = np.array([[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2,0]])
+#b = np.array([[2,2,2,5,7,8,2,5,51], [4,4,3,1,2,7,5,1,1], [8,5,3,6,6,2,2,6,26], [7,8,5,7,8,1,4,7,38], [1,6,6,6,2,6,8,7,0]])
+#c = np.array([[4,5,4,1,5,2,7,2,9,22], [9,3,8,5,4,1,8,2,2,55], [4,8,1,7,8,6,6,3,9,24], [8,8,6,6,4,4,9,2,5,46], [4,2,3,1,5,9,6,4,4,6], [9,3,2,8,1,3,7,7,5,11], [7,8,3,5,3,1,3,6,8,59], [9,4,6,4,1,3,3,8,7,17], [9,5,3,8,6,8,5,3,1, 0]])
+#solve(a)
+
