@@ -36,7 +36,7 @@ def single_run(table, pivot_row_index, pivot_col_index, pivot_element):
   table[pivot_row_index] = table[pivot_row_index]/pivot_element # make pivot element 1 by dividing pivot row / pivot element
   for i in range(len(table)): # for every row 
     if(i != pivot_row_index): # except for pivot row
-      table[i] = table[i]-(table[i, pivot_col_index]*table[pivot_row_index]) # Pivotcolelement to 0 by:  row = row - (Pivotcolnelement * pivotrow)
+      table[i] = table[i]-(table[i, pivot_col_index]*table[pivot_row_index]) # Pivotcolelement to 0 by:  row = row - (Pivotcolelement * pivotrow)
   return table
 
 def check_if_solved(table):
