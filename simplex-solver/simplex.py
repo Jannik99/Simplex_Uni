@@ -45,17 +45,22 @@ def solve(array):
     
     
 def iterate(matrix):
+
     last_row = matrix[len(matrix)-1 , :-1]
     # find position of largest element in last row
-    index_largest_element = np.argmax(last_row, axis = 0)
+    index_largest_element = np.argmax(last_row)
+    print(f'Last row {last_row}')
+    print(f'Largest element {index_largest_element}')
     pivot_column = matrix[:-1, index_largest_element]
 
     # take last columns and divide it with pivot column
     last_column = matrix[:-1, -1]
-    temporary_solution_column = np.divide(last_column, pivot_column, where=pivot_column!=0)
+    
+    with np.errstate(divide="ignore", invalid="ignore"):
+        temporary_solution_column = np.true_divide(last_column, pivot_column, where=pivot_column!=0)
+
     #tmp = last_column / pivot_column
     print(f'Ergebnisspalte: {temporary_solution_column}')
-    #matrix[:-1, -1] = tmp
     # find position of smallest element in temporary column
     # TODO: GRÖ?ER ALS 0
     index_smallest_element = np.argmin(temporary_solution_column, axis = 0)
