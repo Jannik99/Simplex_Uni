@@ -17,10 +17,9 @@ import numpy as np
 
 def init(matrix):
     # Zielfunktion * -1 weil Minimierung
-    tmp = np.multiply(matrix[:-1, :], -1)
+    #tmp = np.multiply(matrix[:-1, :], -1)
     num_rows, num_cols = matrix.shape
-    #matrix[np.delete(np.arange(matrix.shape[0]), num_rows - 1), :] *= -1
-    matrix = tmp
+    matrix[np.delete(np.arange(matrix.shape[0]), num_rows - 1), :] *= -1
     print(f'Nach Multiplikation: \n {matrix}')
     return matrix
 
