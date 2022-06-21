@@ -1,17 +1,20 @@
 from parser import *
-from tracemalloc import stop
 
 import numpy as np
+
+np.set_printoptions(edgeitems=30, linewidth=100000) # Set print options for numpy to use more space in Terminal
 
 test_a = np.array([ [1, 1, 3], [2, 4, 8], [2, 3, 0]])
 test_b = np.array([[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2, 0]])
 test_c = np.array([[4,5,4,1,5,2,7,2,9,22], [9,3,8,5,4,1,8,2,2,55], [4,8,1,7,8,6,6,3,9,24], [8,8,6,6,4,4,9,2,5,46], [4,2,3,1,5,9,6,4,4,6], [9,3,2,8,1,3,7,7,5,11], [7,8,3,5,3,1,3,6,8,59], [9,4,6,4,1,3,3,8,7,17], [9,5,3,8,6,8,5,3,1, 0]])
 
+def printTable(table, msg=None):
+  print(msg + "\n" if msg != None else "", np.ceil(table))
 
 def find_pivot(table):
   print("Finding pivot")
-  pivot_col_index = np.argmax(table[-1])
-  pivot_row_index = np.argmin(np.divide([row[-1] for row in table][:-1], table[:-1, pivot_col_index]))
+  pivot_col_index = np.argmax(table[-1, :-1]) # Find index of column with highest value
+  pivot_row_index = np.argmin(np.divide([row[-1] for row in table][:-1], table[:-1, pivot_col_index])) 
   print("Pivot row index: " + str(pivot_row_index))
   print("Pivot column index: " + str(pivot_col_index))
   print("Pivot element: " + str(table[pivot_row_index][pivot_col_index]))
@@ -37,8 +40,10 @@ def single_run(table, pivot_row_index, pivot_col_index, pivot_element):
   table[pivot_row_index] = table[pivot_row_index]/pivot_element # make pivot element 1 by dividing pivot row / pivot element
   for i in range(len(table)): # for every row 
     if(i != pivot_row_index): # except for pivot row
+      # if(table[i, pivot_col_index] != 0):
       table[i] = table[i]-(table[i, pivot_col_index]*table[pivot_row_index]) # Pivotcolelement to 0 by:  row = row - (Pivotcolelement * pivotrow)
   return table
+
 
 def check_if_solved(table):
   for el in table[-1]:
@@ -54,14 +59,13 @@ def solve(parsed):
   if check_if_solved(table):
     print("Table is already solved")
   else:  
-    print("Solving Table")
-    print(table)
+    printTable(table, "Solving Table")
     table = addSlackVariables(table)
-    print(table)
-    while(not check_if_solved(table)):
+    printTable(table)
+    while(not check_if_solved(table) ):
       table = single_run(table, *find_pivot(table))
-      print(table)
-    print("Table is solved \n", np.round(table, decimals=2))
+      printTable(table)
+    printTable(table, "Solved Table:")
     
   return get_solution_from_solved_table(table, parsed[1])
 
@@ -75,7 +79,6 @@ def get_solution_from_solved_table(table, max_or_min):
             else:
                 x.append(0)
             print("x"+str(i), " = ", x[-1])
-        print("z = ", z)
     else:
         num_rows, num_cols = np.shape(table)
         start_index = num_cols - num_rows
@@ -98,8 +101,9 @@ def solve_all():
     for i in range(len(solutions)):
         print("Solution ", i, ":", solutions[i])
 
-solve_all()
+# solve_all()
+# printTable(getParsedBenchmarks(), "Parsed: ")
 
-# solve((test_a, "max"))
+solve((test_a, "max"))
 # solve((test_b, "min"))
 # solve((test_c, "min"))
