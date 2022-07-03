@@ -22,7 +22,7 @@ def find_pivot(table):
     
 def transposeTable(table):
   print("Transposing table")
-  return np.transpose(table)
+  return np.transpose(table) 
     
 def addSlackVariables(table):
   print("Adding slack variables")
@@ -101,9 +101,9 @@ def solve_all():
     for i in range(len(solutions)):
         print("Solution ", i, ":", solutions[i])
 
-# solve_all()
+solve_all()
 # printTable(getParsedBenchmarks(), "Parsed: ")
 
-solve((test_a, "max"))
+# solve((test_a, "max"))
 # solve((test_b, "min"))
 # solve((test_c, "min"))
