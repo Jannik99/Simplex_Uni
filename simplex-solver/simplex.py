@@ -36,7 +36,7 @@ def solve(array):
         print(f'Largest Element: {largest_element}')
         finished = True if np.max(last_row_without_solution) <= 0 else False
         print(f'Finished variable {finished}')
-        time.sleep(1)
+        time.sleep(0.5)
         
     base_swap = new_matrix[:, num_cols-1:]
     #print(f'base_swap \n {base_swap}')
@@ -59,10 +59,8 @@ def iterate(matrix):
     with np.errstate(divide="ignore", invalid="ignore"):
         temporary_solution_column = np.true_divide(last_column, pivot_column, where=pivot_column!=0)
 
-    #tmp = last_column / pivot_column
     print(f'Ergebnisspalte: {temporary_solution_column}')
     # find position of smallest element in temporary column
-    # TODO: GRÖ?ER ALS 0
     index_smallest_element = np.argmin(temporary_solution_column, axis = 0)
 
     pivot_position = index_smallest_element, index_largest_element
@@ -105,17 +103,10 @@ def print_solution(matrix):
             print(f'Z: {element*-1}')
         iterations +=1
 
-parsed_benchmarks = getParsedBenchmarks()
-benchmarks = []
-for i, parsed in enumerate(parsed_benchmarks):
-    benchmarks.append(parsed[0])
 
-for benchmark in benchmarks:
-    solve(benchmark)
-
-#a = np.array([[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2,0]])
-#b = np.array([[2,2,2,5,7,8,2,5,51], [4,4,3,1,2,7,5,1,1], [8,5,3,6,6,2,2,6,26], [7,8,5,7,8,1,4,7,38], [1,6,6,6,2,6,8,7,0]])
-#c = np.array([[4,5,4,1,5,2,7,2,9,22], [9,3,8,5,4,1,8,2,2,55], [4,8,1,7,8,6,6,3,9,24], [8,8,6,6,4,4,9,2,5,46], [4,2,3,1,5,9,6,4,4,6], [9,3,2,8,1,3,7,7,5,11], [7,8,3,5,3,1,3,6,8,59], [9,4,6,4,1,3,3,8,7,17], [9,5,3,8,6,8,5,3,1, 0]])
-#ki_15 = np.array([[11,1,11,12,11,9,1,2,3,13,6,12,10,7,6,78], [1,8,1,3,15,9,5,3,7,9,1,8,11,6,15,144], [7,7,7,15,3,8,8,12,9,11,6,6,14,4,5,79], [11,9,2,8,6,7,2,12,10,15,1,11,2,15,12,25], [14,9,7,14,2,5,3,4,1,5,6,9,1,2,4,71], [9,6,1,6,2,11,7,13,8,9,7,14,8,10,9,27], [3,7,8,7,2,15,3,8,15,7,9,4,14,3,10,179], [12,3,6,11,4,10,1,13,1,12,7,9,9,9,4,97], [8,9,3,8,14,14,13,1,7,7,13,13,3,5,2,138], [1,6,1,13,14,8,15,1,8,14,6,7,2,7,4,0]])
-#solve(ki_15)
+a = np.array([[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2,0]])
+b = np.array([[2,2,2,5,7,8,2,5,51], [4,4,3,1,2,7,5,1,1], [8,5,3,6,6,2,2,6,26], [7,8,5,7,8,1,4,7,38], [1,6,6,6,2,6,8,7,0]])
+c = np.array([[4,5,4,1,5,2,7,2,9,22], [9,3,8,5,4,1,8,2,2,55], [4,8,1,7,8,6,6,3,9,24], [8,8,6,6,4,4,9,2,5,46], [4,2,3,1,5,9,6,4,4,6], [9,3,2,8,1,3,7,7,5,11], [7,8,3,5,3,1,3,6,8,59], [9,4,6,4,1,3,3,8,7,17], [9,5,3,8,6,8,5,3,1, 0]])
+d = np.array([[11,1,11,12,11,9,1,2,3,13,6,12,10,7,6,78], [1,8,1,3,15,9,5,3,7,9,1,8,11,6,15,144], [7,7,7,15,3,8,8,12,9,11,6,5,14,4,5,79], [11,9,2,8,6,7,2,12,10,15,1,11,2,15,12,25], [14,9,7,14,2,5,3,4,1,5,6,9,1,2,4,71], [9,6,1,6,2,11,7,13,8,9,7,14,8,10,9,27], [3,7,8,7,2,15,3,8,15,7,9,4,14,3,10,179], [12,3,6,11,4,10,1,13,1,12,7,9,9,9,4,97], [8,9,3,8,14,14,13,1,7,7,13,13,3,5,2,138], [1,6,1,13,14,8,15,1,8,14,6,7,2,7,4,0]])
+solve(d)
 
