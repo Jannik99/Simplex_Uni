@@ -1,20 +1,25 @@
+from cmath import isclose
+from inspect import isclass
 from parser import *
 
 import numpy as np
 
-np.set_printoptions(edgeitems=30, linewidth=100000) # Set print options for numpy to use more space in Terminal
+np.set_printoptions(edgeitems=30, linewidth=100000, suppress=True) # Set print options for numpy to use more space in Terminal
 
 test_a = np.array([ [1, 1, 3], [2, 4, 8], [2, 3, 0]])
 test_b = np.array([[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2, 0]])
 test_c = np.array([[4,5,4,1,5,2,7,2,9,22], [9,3,8,5,4,1,8,2,2,55], [4,8,1,7,8,6,6,3,9,24], [8,8,6,6,4,4,9,2,5,46], [4,2,3,1,5,9,6,4,4,6], [9,3,2,8,1,3,7,7,5,11], [7,8,3,5,3,1,3,6,8,59], [9,4,6,4,1,3,3,8,7,17], [9,5,3,8,6,8,5,3,1, 0]])
 
 def printTable(table, msg=None):
-  print(msg + "\n" if msg != None else "", np.ceil(table))
+  # print(msg + "\n" if msg != None else "", np.ceil(table))
+  print(msg + "\n" if msg != None else "", table)
 
 def find_pivot(table):
   print("Finding pivot")
   pivot_col_index = np.argmax(table[-1, :-1]) # Find index of column with highest value
-  pivot_row_index = np.argmin(np.divide([row[-1] for row in table][:-1], table[:-1, pivot_col_index])) 
+  pivot_rows_value = np.divide([row[-1] for row in table][:-1], table[:-1, pivot_col_index])
+  pivot_row_index = np.argmin(pivot_rows_value[pivot_rows_value!=0]) 
+  
   print("Pivot row index: " + str(pivot_row_index))
   print("Pivot column index: " + str(pivot_col_index))
   print("Pivot element: " + str(table[pivot_row_index][pivot_col_index]))
@@ -102,8 +107,6 @@ def solve_all():
         print("Solution ", i, ":", solutions[i])
 
 solve_all()
-# printTable(getParsedBenchmarks(), "Parsed: ")
-
 # solve((test_a, "max"))
 # solve((test_b, "min"))
 # solve((test_c, "min"))
