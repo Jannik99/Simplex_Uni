@@ -3,6 +3,8 @@ from parser import *
 import time
 import numpy as np
 
+np.set_printoptions(edgeitems=30, linewidth=100000, suppress=True)
+
 def solve(array):
     # Transponiere weil Minimierungsproblem
     transposed = np.transpose(array)
@@ -57,7 +59,11 @@ def iterate(matrix):
     last_column = matrix[:-1, -1]
     
     with np.errstate(divide="ignore", invalid="ignore"):
-        temporary_solution_column = np.true_divide(last_column, pivot_column, where=pivot_column!=0)
+        temporary_solution_column = np.true_divide(last_column, pivot_column, where=np.not_equal(pivot_column, 0))
+        # temporary_solution_column = np.true_divide(last_column, pivot_column, where=pivot_column!=0)
+
+    print(f'Letze Spalte: {last_column}')
+    print(f'Pivotspalte: {pivot_column}')
 
     print(f'Ergebnisspalte: {temporary_solution_column}')
     # find position of smallest element in temporary column
