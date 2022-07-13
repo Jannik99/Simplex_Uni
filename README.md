@@ -2,9 +2,9 @@
 
 ## 1. Setup Virtual Environment
 
-a) run: `pip install virtualenv`
-b) if there is no folder "./venv" run: `mkdir venv`
-c) run: `virtualenv venv`
+a) run: `pip install virtualenv`<br>
+b) if there is no folder "./venv" run: `mkdir venv`<br>
+c) run: `virtualenv venv`<br>
 
 ## 2. Activate Virtual Environment
 
