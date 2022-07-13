@@ -42,7 +42,7 @@ python -c 'import parser; parser.getParsedBenchmarks()'
 
 ## Run Simplex with Parser
 
-a) go to "./simplex-solver"
+a) go to "./simplex-solver"<br>
 b) run the solver
 
 ```
