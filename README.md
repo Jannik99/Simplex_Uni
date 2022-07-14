@@ -17,7 +17,7 @@ run: `.\venv\Scripts\activate.bat`
 run: `source ./venv/bin/activate`
 
 ### Install Numpy
-<strong>Note: </strong>This step is only required if you installed a fresh virtualenv:<br>´pip install numpy´
+<strong>Note: </strong>This step is only required if you installed a fresh virtualenv:<br> `pip install numpy`
 
 # Add new Benchmarks
 
