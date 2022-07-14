@@ -16,6 +16,9 @@ run: `.\venv\Scripts\activate.bat`
 
 run: `source ./venv/bin/activate`
 
+### Install Numpy
+This step is only required if you installed a fresh virtualenv: ´pip install numpy
+
 # Add new Benchmarks
 
 a) go to "./simplex-solver/benchmarks"<br>
@@ -48,3 +51,5 @@ b) run the solver
 ```
 python main.py
 ```
+
+The programm will run all Benchmarks inside the benchmarks-folder. Since there is a Problem with KI_20 and KI_30, it will run forever if they are inside this folder.
