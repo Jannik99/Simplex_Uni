@@ -1,3 +1,4 @@
+import copy
 from cmath import isclose
 from inspect import isclass
 from parser import *
@@ -17,8 +18,26 @@ def printTable(table, msg=None):
 def find_pivot(table):
   print("Finding pivot")
   pivot_col_index = np.argmax(table[-1, :-1]) # Find index of column with highest value
-  pivot_rows_value = np.divide([row[-1] for row in table][:-1], table[:-1, pivot_col_index]) # Divide pivot-column by last-rows values
-  pivot_row_index = np.argmin(pivot_rows_value[pivot_rows_value!=0]) # Find the lowest value of the step previously
+  # pivot_rows_value = np.divide([row[-1] for row in table][:-1], copy.copy(table[:-1, pivot_col_index])) # Divide pivot-column by last-rows values
+  print("old rows_value", np.divide([row[-1] for row in table][:-1], copy.copy(table[:-1, pivot_col_index])))
+  pivot_rows_value = []
+  for i in range(len(table)-1):
+    if(table[i][pivot_col_index] > 0 and table[i][-1] != 0):
+      pivot_rows_value.append(np.round(table[i][-1]/table[i][pivot_col_index], 2))
+    else:
+      pivot_rows_value.append(0)
+
+  print("new rows_value", pivot_rows_value)
+
+  # pivot_row_index = np.argmin(pivot_rows_value[pivot_rows_value!=0]) # Find the lowest value of the step previously
+  pivot_row_index = None
+
+  for i in range(len(pivot_rows_value)):
+    if(pivot_rows_value[i] != 0):
+      if(pivot_row_index == None):
+        pivot_row_index = i
+      if(pivot_rows_value[i] < pivot_rows_value[pivot_row_index]):
+        pivot_row_index = i
   
   print("Pivot row index: " + str(pivot_row_index))
   print("Pivot column index: " + str(pivot_col_index))
