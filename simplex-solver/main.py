@@ -17,8 +17,8 @@ def printTable(table, msg=None):
 def find_pivot(table):
   print("Finding pivot")
   pivot_col_index = np.argmax(table[-1, :-1]) # Find index of column with highest value
-  pivot_rows_value = np.divide([row[-1] for row in table][:-1], table[:-1, pivot_col_index])
-  pivot_row_index = np.argmin(pivot_rows_value[pivot_rows_value!=0]) 
+  pivot_rows_value = np.divide([row[-1] for row in table][:-1], table[:-1, pivot_col_index]) # Divide pivot-column by last-rows values
+  pivot_row_index = np.argmin(pivot_rows_value[pivot_rows_value!=0]) # Find the lowest value of the step previously
   
   print("Pivot row index: " + str(pivot_row_index))
   print("Pivot column index: " + str(pivot_col_index))
