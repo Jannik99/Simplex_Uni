@@ -56,4 +56,4 @@ The programm will run all Benchmarks inside the benchmarks-folder. Since there i
 
 # Binaries
 
-I tried to compile the Python-Scripts to binaries which turned out not to be that easy. The thought was to first use cython to generate a .c file and then compile that .c file with gcc. But using cython generated an Import which didnt exist. I'm afraid I couldnt solve this issue so I decided just to upload the file I genererated. You can find it at ./simplex-solver/combined.c 
+I tried to compile the Python-Scripts to binaries which turned out not to be that easy. The thought was to first use cython to generate a .c file and then compile that .c file with gcc. But using cython generated an Import which didnt exist. I'm afraid I couldnt solve this issue so I decided just to upload the file I generated. You can find it at ./simplex-solver/combined.c 
