@@ -53,3 +53,7 @@ python main.py
 ```
 
 The programm will run all Benchmarks inside the benchmarks-folder. Since there is a Problem with KI_20 and KI_30, it will run forever if they are inside this folder.
+
+# Binaries
+
+I tried to compile the Python-Scripts to binaries which turned out not to be that easy. The thought was to first use cython to generate a .c file and then compile that .c file with gcc. But using cython generated an Import which didnt exist. I'm afraid I couldnt solve this issue so I decided just to upload the file I generated. You can find it at ./simplex-solver/combined.c 
