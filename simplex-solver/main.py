@@ -7,18 +7,12 @@ import numpy as np
 
 np.set_printoptions(edgeitems=30, linewidth=100000, suppress=True) # Set print options for numpy to use more space in Terminal
 
-test_a = np.array([ [1, 1, 3], [2, 4, 8], [2, 3, 0]])
-test_b = np.array([[1,1,1,4,5,5], [4,1,4,3,3,9], [5,1,1,4,4,15], [1,3,3,5,2, 0]])
-test_c = np.array([[4,5,4,1,5,2,7,2,9,22], [9,3,8,5,4,1,8,2,2,55], [4,8,1,7,8,6,6,3,9,24], [8,8,6,6,4,4,9,2,5,46], [4,2,3,1,5,9,6,4,4,6], [9,3,2,8,1,3,7,7,5,11], [7,8,3,5,3,1,3,6,8,59], [9,4,6,4,1,3,3,8,7,17], [9,5,3,8,6,8,5,3,1, 0]])
-
 def printTable(table, msg=None):
-  # print(msg + "\n" if msg != None else "", np.ceil(table))
   print(msg + "\n" if msg != None else "", table)
 
 def find_pivot(table):
   print("Finding pivot")
   pivot_col_index = np.argmax(table[-1, :-1]) # Find index of column with highest value
-  # pivot_rows_value = np.divide([row[-1] for row in table][:-1], copy.copy(table[:-1, pivot_col_index])) # Divide pivot-column by last-rows values
   print("old rows_value", np.divide([row[-1] for row in table][:-1], copy.copy(table[:-1, pivot_col_index])))
   pivot_rows_value = []
   for i in range(len(table)-1):
@@ -28,8 +22,6 @@ def find_pivot(table):
       pivot_rows_value.append(0)
 
   print("new rows_value", pivot_rows_value)
-
-  # pivot_row_index = np.argmin(pivot_rows_value[pivot_rows_value!=0]) # Find the lowest value of the step previously
   pivot_row_index = None
 
   for i in range(len(pivot_rows_value)):
@@ -64,10 +56,8 @@ def single_run(table, pivot_row_index, pivot_col_index, pivot_element):
   table[pivot_row_index] = table[pivot_row_index]/pivot_element # make pivot element 1 by dividing pivot row / pivot element
   for i in range(len(table)): # for every row 
     if(i != pivot_row_index): # except for pivot row
-      # if(table[i, pivot_col_index] != 0):
       table[i] = table[i]-(table[i, pivot_col_index]*table[pivot_row_index]) # Pivotcolelement to 0 by:  row = row - (Pivotcolelement * pivotrow)
   return table
-
 
 def check_if_solved(table):
   for el in table[-1]:
@@ -126,6 +116,3 @@ def solve_all():
         print("Solution ", i, ":", solutions[i])
 
 solve_all()
-# solve((test_a, "max"))
-# solve((test_b, "min"))
-# solve((test_c, "min"))
